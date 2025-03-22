@@ -1,0 +1,24 @@
+{
+    "StackResourceSummaries": [
+        {
+            "LogicalResourceId": "LambdaExecutionRole",
+            "PhysicalResourceId": "day1-basic-stack-LambdaExecutionRole-7o4MOHhodVX0",
+            "ResourceType": "AWS::IAM::Role",
+            "LastUpdatedTimestamp": "2025-03-22T11:22:00.202000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        },
+        {
+            "LogicalResourceId": "SampleLambdaFunction",
+            "PhysicalResourceId": "SampleHelloFunction",
+            "ResourceType": "AWS::Lambda::Function",
+            "LastUpdatedTimestamp": "2025-03-22T11:22:11.259000+00:00",
+            "ResourceStatus": "CREATE_COMPLETE",
+            "DriftInformation": {
+                "StackResourceDriftStatus": "NOT_CHECKED"
+            }
+        }
+    ]
+}

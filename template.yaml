@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'  # テンプレートのバージョン（固定）
+
+Description: Day1 - S3 and Lambda basic structure  # テンプレートの概要説明
+
+Parameters:
+  BucketName:  # ユーザーから受け取る入力パラメータ
+    Type: String
+    Description: S3 Bucket Name  # Lambdaコードを格納するバケット名
+
+Resources:
+  # SampleS3Bucket:
+  #   Type: AWS::S3::Bucket  # S3バケットの作成
+  #   Properties:
+  #     BucketName: !Ref BucketName  # 入力パラメータで指定された名前を使う
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role  # Lambda関数が使うIAMロール
+    Properties:
+      AssumeRolePolicyDocument:  # 信頼ポリシー（Lambdaサービスがこのロールを引き受けられる）
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com  # Lambdaサービスに限定
+            Action: sts:AssumeRole
+      Path: "/"
+      Policies:  # インラインポリシーの定義（CloudWatchログ出力用）
+        - PolicyName: LambdaBasicExecution
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup        # ロググループ作成
+                  - logs:CreateLogStream       # ログストリーム作成
+                  - logs:PutLogEvents          # ログ書き込み
+                Resource: "*"  # 任意のリソースに対して許可（簡易化のため）
+
+  SampleLambdaFunction:
+    Type: AWS::Lambda::Function  # Lambda関数の作成
+    Properties:
+      FunctionName: SampleHelloFunction  # 関数名
+      Handler: app.lambda_handler  # Lambdaのエントリポイント（app.py内のlambda_handler関数）
+      Role: !GetAtt LambdaExecutionRole.Arn  # 先ほど定義したIAMロールのARNを使用
+      Runtime: python3.9  # ランタイム環境（Python 3.9）
+      Timeout: 5  # 最大実行時間（秒）
+      Code:  # Lambdaコードの格納場所（S3経由）
+        S3Bucket: !Ref BucketName
+        S3Key: lambda/app.zip  # S3バケット内のZIPファイルのパス
+
+Outputs:
+  LambdaFunctionName:
+    Value: !Ref SampleLambdaFunction  # 作成したLambda関数名を出力
+    Description: The name of the Lambda function

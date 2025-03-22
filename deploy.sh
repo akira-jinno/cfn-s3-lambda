@@ -34,3 +34,12 @@ aws cloudformation deploy \
 # - 初回のみS3バケットを手動で作成しておく必要があります
 # - Lambdaコードに変更がある場合もこのスクリプトで再デプロイ可能です
 # ------------------------------------
+
+# スタック削除
+aws cloudformation delete-stack --stack-name day1-basic-stack
+
+# 進行状況の確認
+aws cloudformation describe-stacks \
+  --stack-name day1-basic-stack \
+  --query "Stacks[0].StackStatus"
+
